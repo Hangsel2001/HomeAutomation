@@ -1,0 +1,10 @@
+{
+  "name": "xbee-receiver",
+  "version": "0.0.0",
+  "description": "xbee-receiver",
+  "main": "app.js",
+  "author": {
+    "name": "Markus",
+    "email": ""
+  }
+}
