@@ -26,9 +26,12 @@ volatile int status = 0;
 unsigned long lastRead = 0;
 unsigned long lastChange = 0;
 volatile unsigned int lastSecond = 0;
+bool updatedTime = false;
+bool pendingData = false;
 
 void setup()
 {
+	delay(3000);
 	lcd.begin(16, 2);
 	Serial.begin(9600);
 	Serial.println("DHT TEST PROGRAM ");
@@ -99,22 +102,37 @@ void readSensor() {
 void readSerial() {
 
 	while (Serial1.available() > 0) {
-		unsigned long data = Serial1.read();
-		
+		int next = Serial1.peek();
+
+		Serial.println("Receiving");
 		// 2 identifies clock update
-		if (data == 2) {
+		if (next == 2 && Serial1.available() > 4) {
+	
+			unsigned long data = Serial1.read(); // removes start byte
+	
+			Serial.println("Is 2");
 			unsigned long time = 0;
 			for (int i = 3; i >= 0; i--) {
 				data = Serial1.read();
+				
 				time = time | data << (8 * i);
-			}
-			
+				Serial.print(data);
+				Serial.print(" ");
+				Serial.print(data, BIN);
+				Serial.print(" ");
+				Serial.print(time, BIN);
+				Serial.print(" ");
+				Serial.println(time);
+			}			
+			Serial.println(time);
 			setTime(time);
+			updatedTime = true;
 		}
 
-		if (data == 1) {
+		if (next == 1) {
+			byte data = Serial1.read();
 			do{
-				byte data = Serial1.read();
+				data = Serial1.read();
 				int i = 0;
 				EEPROM.write(i++, data);
 			} while (data != 4);
@@ -129,8 +147,13 @@ void loop()
 		readSensor();
 		temperature = DHT.temperature;
 		humidity = DHT.humidity;
+		Serial.println("Send to Serial");
 		sendToXbee();
 		lastRead = millis();
+		if (!updatedTime) {
+			Serial.println("Not updated");
+			Serial1.write("U");
+		}
 	}
 
 	readSerial();

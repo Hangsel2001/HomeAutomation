@@ -1,6 +1,16 @@
 ﻿var util = require('util');
 var SerialPort = require('serialport').SerialPort;
 var xbee_api = require('xbee-api');
+var mysql = require('mysql');
+var dateFormat = require('dateformat');
+var connection = mysql.createConnection({
+    host     : 'localhost',
+    user     : 'root',
+    password : 'Vulcan2001!',
+    database : 'mmeasurements'
+});
+
+
 
 var C = xbee_api.constants;
 
@@ -12,6 +22,8 @@ var serialport = new SerialPort("COM10", {
     baudrate: 9600,
     parser: xbeeAPI.rawParser()
 });
+
+var devices = [];
 
 var sendCurrentTime = function (address) {
     var seconds = Math.floor(Date.now() / 1000);
@@ -27,7 +39,36 @@ var sendCurrentTime = function (address) {
     console.log(seconds);
 };
 
+var lastLog;
+
+var logToDb = function (measurements) {
+    var write = function (type, value) {
+        var now = Date(Date.now());
+        connection.query("REPLACE INTO current_measurements (time, devicename, type, value) VALUES (" + dateFormat(now, '%Y-%m-%d %H:%M:%S')  +", " + "Verkstad" + ", " + type+ ", " + value + ")",  function (err, rows, fields) {
+        });
+        if (Date.now() - lastLog > 30000) {
+            connection.query("INSERT INTO measurements (time, devicename, type, value) VALUES (" + dateFormat(now, '%Y-%m-%d %H:%M:%S') + ", " + "Verkstad" + ", " + type + ", " + value + ")", function (err, rows, fields) {  
+                
+            });
+            lastLog = Date.now();
+        };
+    }
+    if (measurements.T) { 
+        write("temperature", measurements.T);
+    };
+    if (measurements.H) { 
+        write("humidity", measurements.H);
+    }
+    
+};
+
 xbeeAPI.on("frame_object", function (frame) {
+
+    if (devices.indexOf(frame.remote64) === -1) {
+        sendCurrentTime(frame.remote64);
+        devices.push(frame.remote64);
+    }
+
     if (frame.data && frame.data.length) {
         var index = 0;
         var measurements = {};
@@ -65,7 +106,7 @@ xbeeAPI.on("frame_object", function (frame) {
                     index++;
             }
         }
-        console.log(measurements);
+        logToDb(measurements);
     }
 });
 

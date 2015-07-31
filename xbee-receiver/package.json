@@ -6,5 +6,9 @@
   "author": {
     "name": "Markus",
     "email": ""
+  },
+  "dependencies": {
+    "dateformat": "^1.0.11",
+    "mysql": "^2.8.0"
   }
 }
