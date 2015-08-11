@@ -1,0 +1,13 @@
+{
+  "name": "DBTester",
+  "version": "0.0.0",
+  "description": "DBTester",
+  "main": "app.js",
+  "author": {
+    "name": "Markus",
+    "email": ""
+  },
+  "dependencies": {
+    "mysql": "^2.8.0"
+  }
+}

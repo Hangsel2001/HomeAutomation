@@ -7,6 +7,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XbeeTempAlerter", "XbeeTemp
 EndProject
 Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "xbee-receiver", "xbee-receiver\xbee-receiver.njsproj", "{EF3563E1-77C5-42BB-9E49-84111CC44555}"
 EndProject
+Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "home-automation-API", "home-automation-API\home-automation-API.njsproj", "{90713675-00D5-4E2F-A367-9694D35827B1}"
+EndProject
+Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "DBTester", "DBTester\DBTester.njsproj", "{8CCC2436-4F00-493A-84F5-660814E0FDE2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,6 +33,22 @@ Global
 		{EF3563E1-77C5-42BB-9E49-84111CC44555}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EF3563E1-77C5-42BB-9E49-84111CC44555}.Release|Win32.ActiveCfg = Release|Any CPU
 		{EF3563E1-77C5-42BB-9E49-84111CC44555}.Release|Win32.Build.0 = Release|Any CPU
+		{90713675-00D5-4E2F-A367-9694D35827B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90713675-00D5-4E2F-A367-9694D35827B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90713675-00D5-4E2F-A367-9694D35827B1}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{90713675-00D5-4E2F-A367-9694D35827B1}.Debug|Win32.Build.0 = Debug|Any CPU
+		{90713675-00D5-4E2F-A367-9694D35827B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90713675-00D5-4E2F-A367-9694D35827B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90713675-00D5-4E2F-A367-9694D35827B1}.Release|Win32.ActiveCfg = Release|Any CPU
+		{90713675-00D5-4E2F-A367-9694D35827B1}.Release|Win32.Build.0 = Release|Any CPU
+		{8CCC2436-4F00-493A-84F5-660814E0FDE2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8CCC2436-4F00-493A-84F5-660814E0FDE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8CCC2436-4F00-493A-84F5-660814E0FDE2}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{8CCC2436-4F00-493A-84F5-660814E0FDE2}.Debug|Win32.Build.0 = Debug|Any CPU
+		{8CCC2436-4F00-493A-84F5-660814E0FDE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8CCC2436-4F00-493A-84F5-660814E0FDE2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8CCC2436-4F00-493A-84F5-660814E0FDE2}.Release|Win32.ActiveCfg = Release|Any CPU
+		{8CCC2436-4F00-493A-84F5-660814E0FDE2}.Release|Win32.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

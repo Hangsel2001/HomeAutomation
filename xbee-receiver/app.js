@@ -7,10 +7,10 @@ var connection = mysql.createConnection({
     host     : 'localhost',
     user     : 'root',
     password : 'Vulcan2001!',
-    database : 'mmeasurements'
+    database : 'measurements'
 });
 
-
+connection.connect();
 
 var C = xbee_api.constants;
 
@@ -18,7 +18,7 @@ var xbeeAPI = new xbee_api.XBeeAPI({
     api_mode: 1
 });
 
-var serialport = new SerialPort("COM10", {
+var serialport = new SerialPort("/dev/ttyUSB0", {
     baudrate: 9600,
     parser: xbeeAPI.rawParser()
 });
@@ -39,18 +39,24 @@ var sendCurrentTime = function (address) {
     console.log(seconds);
 };
 
-var lastLog;
+var lastLog = {};
 
 var logToDb = function (measurements) {
     var write = function (type, value) {
+        if (lastLog[type] == undefined) {
+            lastLog[type] = 0;
+        }
         var now = Date(Date.now());
-        connection.query("REPLACE INTO current_measurements (time, devicename, type, value) VALUES (" + dateFormat(now, '%Y-%m-%d %H:%M:%S')  +", " + "Verkstad" + ", " + type+ ", " + value + ")",  function (err, rows, fields) {
+        var query = "REPLACE INTO current_measurements (time, devicename, type, value) VALUES ('" + dateFormat(now, 'yyyy-mm-dd HH:MM:ss')  +"', " + "'Verkstad'" + ", '" + type+ "', " + value + ")";
+        console.log(query);
+        connection.query(query,  function (err, rows, fields) {
+            console.log(err);
         });
-        if (Date.now() - lastLog > 30000) {
-            connection.query("INSERT INTO measurements (time, devicename, type, value) VALUES (" + dateFormat(now, '%Y-%m-%d %H:%M:%S') + ", " + "Verkstad" + ", " + type + ", " + value + ")", function (err, rows, fields) {  
-                
+        if (Date.now() - lastLog[type] > 30000) {
+            connection.query("INSERT INTO measurements (time, devicename, type, value) VALUES ('" + dateFormat(now,  'yyyy-mm-dd HH:MM:ss') + "', " + "'Verkstad'" + ", '" + type + "', " + value + ")", function (err, rows, fields) {  
+            console.log(query);     
             });
-            lastLog = Date.now();
+            lastLog[type] = Date.now();
         };
     }
     if (measurements.T) { 
@@ -64,12 +70,15 @@ var logToDb = function (measurements) {
 
 xbeeAPI.on("frame_object", function (frame) {
 
+
     if (devices.indexOf(frame.remote64) === -1) {
+        console.log("Update current time for " + frame.remote64)
         sendCurrentTime(frame.remote64);
         devices.push(frame.remote64);
     }
 
     if (frame.data && frame.data.length) {
+        console.log("Received data: " + frame.data);
         var index = 0;
         var measurements = {};
         while (index < frame.data.length) {
@@ -107,6 +116,7 @@ xbeeAPI.on("frame_object", function (frame) {
             }
         }
         logToDb(measurements);
+        console.log(measurements);
     }
 });
 

@@ -23,7 +23,9 @@ CREATE TABLE measurements (
 	type ENUM('temperature','atmospheric pressure','humidity','soil moisture','rain','wind direction','wind speed'), 
 	value DECIMAL(20,8),
 	FOREIGN KEY (devicename) REFERENCES devices(shortname) ON DELETE RESTRICT,
-	PRIMARY KEY(devicename, type, time)
+	PRIMARY KEY(devicename, type, time),
+	INDEX(time)
+
 );
 
 CREATE TABLE current_measurements (
