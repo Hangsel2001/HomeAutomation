@@ -24,12 +24,18 @@
     <ClInclude Include="Visual Micro\.XBeeTempAlerter.vsarduino.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="RadioOperator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dht.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="time.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RadioOperator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
