@@ -1,12 +1,13 @@
 #include "dht.h"
 #include <LiquidCrystal.h>
-#include "time.h"
 #include <string.h>
 #include <EEPROM.h>
 #include "RadioOperator.h"
+#include "ScreenHandler.h"
 
 dht DHT;
 LiquidCrystal lcd(3, 4, 5, 6, 7, 8);
+ScreenHandler screen(lcd);
 RadioOperator radioOperator(Serial1);
 #define DHT22_PIN 2
 #define BUTTON_PIN 9
@@ -17,10 +18,10 @@ double temperature;
 double humidity;
 unsigned long lastRead = 0;
 unsigned long lastChange = 0;
-volatile unsigned int lastSecond = 0;
+
 bool updatedTime = false;
 bool pendingData = false;
-char deviceName[9] = "        ";
+
 
 void setup()
 {
@@ -37,12 +38,12 @@ void setup()
 	Serial.println("XbeeTempAlerter");
 	Serial.println("Ver 0.1 2015-10-03");
 
-	loadDeviceNameFromEEPROM();
-
+	screen.setDeviceName(loadDeviceNameFromEEPROM());
 }
 
-void loadDeviceNameFromEEPROM()
+char * loadDeviceNameFromEEPROM()
 {
+	char deviceName[] = "        ";
 	for (int i = 0; i < 8; i++)
 	{
 		deviceName[i] = EEPROM.read(i);
@@ -51,12 +52,13 @@ void loadDeviceNameFromEEPROM()
 		Serial.print(" : ");
 		Serial.println(deviceName[i]);
 	}
+	return deviceName;
 }
 
-void writeDeviceNametoEEPROM()
+void writeDeviceNametoEEPROM(char* deviceName)
 {
 	Serial.print("Updating EEPROM with ");
-	Serial.println(deviceName);
+	Serial.println(*deviceName);
 	for (int i = 0; i < 8; i++) {
 		EEPROM.write(i, deviceName[i]);
 		Serial.print("EERPOM ");
@@ -79,12 +81,7 @@ void loop()
 	getIncoming();
 	getButton();
 
-	if (second() != lastSecond) {
 
-		updateLCD();
-
-		lastSecond = second();
-	}
 }
 
 void getReadings() {
@@ -117,10 +114,16 @@ void getIncoming()
 	switch (status)
 	{
 	case ro_time_received:
-		setTime(radioOperator.getTime());
+		screen.setCurrentTime(radioOperator.getTime());
 		break;
 	case ro_name_received:
-		//deviceName = radioOperator.getDeviceName();
+		setNewDeviceName(&radioOperator.getDeviceName());
+		break;
+	case ro_message_pending_received:
+		break;
+	case ro_message_received:
+		break;
+	case ro_readings_received:
 		break;
 	default:
 		break;
@@ -128,28 +131,13 @@ void getIncoming()
 
 }
 
+void setNewDeviceName(char * deviceName) {
+	writeDeviceNametoEEPROM(deviceName);
+	screen.setDeviceName(deviceName);
+}
+
 void getButton() {};
 
-void updateLCD() {
-	lcd.setCursor(0, 0);
-	printDigits(hour());
-	lcd.print(":");
-	printDigits(minute());
-	lcd.print(":");
-	printDigits(second());
-
-	char temp[6];
-	dtostrf(temperature, 6, 1, temp);
-
-	lcd.print(temp);
-	lcd.print((char)223);
-	lcd.print("C");
-	lcd.setCursor(0, 1);
-	lcd.print(deviceName);
-	lcd.print("   ");
-	lcd.print(humidity, 1);
-	lcd.print("%");
-}
 
 void printDigits(int digits) {
 	// utility function for digital clock display: prints preceding colon and leading 0

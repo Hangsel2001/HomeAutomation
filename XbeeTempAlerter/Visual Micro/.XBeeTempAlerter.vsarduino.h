@@ -88,6 +88,8 @@ extern "C" void __cxa_pure_virtual() {;}
 #include <XbeeTempAlerter.ino>
 #include <RadioOperator.cpp>
 #include <RadioOperator.h>
+#include <ScreenHandler.cpp>
+#include <ScreenHandler.h>
 #include <dht.cpp>
 #include <dht.h>
 #include <time.cpp>

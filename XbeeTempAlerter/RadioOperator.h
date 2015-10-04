@@ -1,11 +1,11 @@
 #pragma once
 
-#ifndef radio_operator
-#define radio_operator
 #define ro_none 0;
 #define ro_name_received 1
 #define ro_time_received 2
 #define ro_message_pending_received 3
+#define ro_message_received 4
+#define ro_readings_received 5
 
 #include <HardwareSerial.h>
 
@@ -27,5 +27,3 @@ public:
 	unsigned long getTime();
 	char& getDeviceName();
 };
-
-#endif

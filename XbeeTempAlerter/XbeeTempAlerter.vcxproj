@@ -83,6 +83,7 @@
       <FileType>CppCode</FileType>
     </ClInclude>
     <ClInclude Include="RadioOperator.h" />
+    <ClInclude Include="ScreenHandler.h" />
     <ClInclude Include="time.h">
       <FileType>CppCode</FileType>
     </ClInclude>
@@ -91,6 +92,7 @@
   <ItemGroup>
     <ClCompile Include="dht.cpp" />
     <ClCompile Include="RadioOperator.cpp" />
+    <ClCompile Include="ScreenHandler.cpp" />
     <ClCompile Include="time.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
