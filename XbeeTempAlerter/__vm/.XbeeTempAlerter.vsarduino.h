@@ -87,6 +87,10 @@ extern "C" void __cxa_pure_virtual() {;}
 #define portInputRegister(P)
 #define portModeRegister(P)
 #include <..\XbeeTempAlerter\XbeeTempAlerter.ino>
+#include <..\XbeeTempAlerter\RadioOperator.cpp>
+#include <..\XbeeTempAlerter\RadioOperator.h>
+#include <..\XbeeTempAlerter\ScreenHandler.cpp>
+#include <..\XbeeTempAlerter\ScreenHandler.h>
 #include <..\XbeeTempAlerter\dht.cpp>
 #include <..\XbeeTempAlerter\dht.h>
 #include <..\XbeeTempAlerter\time.cpp>

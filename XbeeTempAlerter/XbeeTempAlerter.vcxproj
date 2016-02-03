@@ -45,10 +45,10 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino;C:\Program Files (x86)\Arduino\hardware\arduino\avr\variants\micro;C:\Users\jag\Repos\Hangsel2001.HomeAutomation\XbeeTempAlerter;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries\EEPROM;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries\EEPROM\utility;C:\Program Files (x86)\Arduino\libraries\LiquidCrystal\src;C:\Program Files (x86)\Arduino\libraries\LiquidCrystal\src\utility;C:\Program Files (x86)\Arduino\libraries;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries;C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\Extensions\gnznfzmd.hti\Micro Platforms\default\debuggers;C:\Users\jag\Documents\Arduino\libraries;C:\Program Files (x86)\Arduino\hardware\tools\avr/avr/include/;C:\Program Files (x86)\Arduino\hardware\tools\avr//avr/include/avr/;C:\Program Files (x86)\Arduino\hardware\tools\avr/lib\gcc\avr\4.8.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <ForcedIncludeFiles>C:\Users\jag\Repos\Hangsel2001.HomeAutomation\XbeeTempAlerter\Visual Micro\.XbeeTempAlerter.vsarduino.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <IgnoreStandardIncludePath>true</IgnoreStandardIncludePath>
-      <PreprocessorDefinitions>__AVR_ATmega32u4__;__AVR_ATmega32U4__;_VMDEBUG=1;F_CPU=16000000L;ARDUINO=165;ARDUINO_AVR_MICRO;ARDUINO_ARCH_AVR;USB_VID=0x2341;USB_PID=0x8037;__cplusplus;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino;C:\Program Files (x86)\Arduino\hardware\arduino\avr\variants\micro;C:\dev\Hangsel2001.HomeAutomation\XbeeTempAlerter;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries\EEPROM;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries\EEPROM\utility;C:\Program Files (x86)\Arduino\libraries\LiquidCrystal\src;C:\Program Files (x86)\Arduino\libraries\LiquidCrystal\src\utility;C:\Program Files (x86)\Arduino\libraries;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries;C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\Extensions\r5kl0lxx.kc5\Micro Platforms\default\debuggers;C:\Users\jag\Documents\Arduino\libraries;C:\dev\Hangsel2001.HomeAutomation\XbeeTempAlerter;C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino;C:\Program Files (x86)\Arduino\hardware\arduino\avr\variants\micro;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries\EEPROM;C:\Program Files (x86)\Arduino\libraries\LiquidCrystal\src;C:\Program Files (x86)\Arduino\libraries;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries;C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\Extensions\r5kl0lxx.kc5\Micro Platforms\default\debuggers;C:\Users\jag\Documents\Arduino\libraries;C:\Users\jag\AppData\Local\arduino15\packages\arduino\tools\avr-gcc\4.8.1-arduino5/avr/include/;C:\Users\jag\AppData\Local\arduino15\packages\arduino\tools\avr-gcc\4.8.1-arduino5//avr/include/avr/;C:\Users\jag\AppData\Local\arduino15\packages\arduino\tools\avr-gcc\4.8.1-arduino5/lib\gcc\avr\4.8.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ForcedIncludeFiles>C:\dev\Hangsel2001.HomeAutomation\XbeeTempAlerter\__vm\.XbeeTempAlerter.vsarduino.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
+      <PreprocessorDefinitions>__AVR_ATmega32u4__;__AVR_ATmega32U4__;F_CPU=16000000L;ARDUINO=10605;ARDUINO_AVR_MICRO;ARDUINO_ARCH_AVR;USB_VID=0x2341;USB_PID=0x8037;__cplusplus;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -88,6 +88,7 @@
       <FileType>CppCode</FileType>
     </ClInclude>
     <ClInclude Include="Visual Micro\.XBeeTempAlerter.vsarduino.h" />
+    <ClInclude Include="__vm\.XbeeTempAlerter.vsarduino.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dht.cpp" />

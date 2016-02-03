@@ -25,8 +25,14 @@ bool pendingData = false;
 
 void setup()
 {
-	pinMode(BUTTON_PIN, INPUT_PULLUP);
-
+	delay(3000);
+	lcd.begin(16, 2);
+	Serial.begin(9600);
+	Serial.println("DHT TEST PROGRAM ");
+	Serial.print("LIBRARY VERSION: ");
+	Serial.println(DHT_LIB_VERSION);
+	Serial.println();
+	Serial.println("Type,\tstatus,\tHumidity (%),\tTemperature (C)");
 	Serial1.begin(9600);
 	radioOperator.requestCurrentTime();
 
@@ -71,37 +77,37 @@ void writeDeviceNametoEEPROM(char* deviceName)
 void loop()
 {
 	if (millis() - lastRead > 3000) {
-		
+
 		getReadings();
 		transmitReadings();
 
 		lastRead = millis();
-	}
+}
 
 	getIncoming();
 	getButton();
 
-
+	
 }
-
+	
 void getReadings() {
 	dhtStatus = DHT.read22(DHT22_PIN);
 	Serial.print("Status: ");
 	Serial.println(dhtStatus);
-
+				
 	if (dhtStatus == DHTLIB_OK)
 	{
 		temperature = DHT.temperature;
 		humidity = DHT.humidity;
-	}
-}
+			}			
+		}
 
 void transmitReadings()
 {
 	if (dhtStatus != DHTLIB_OK)
 	{
 		radioOperator.sendError(dhtStatus);
-	}
+		}
 	else
 	{
 		radioOperator.sendReadings(temperature, humidity);
@@ -112,29 +118,23 @@ void getIncoming()
 {
 	int status = radioOperator.available();
 	switch (status)
-	{
-	case ro_time_received:
-		screen.setCurrentTime(radioOperator.getTime());
-		break;
-	case ro_name_received:
-		setNewDeviceName(&radioOperator.getDeviceName());
-		break;
-	case ro_message_pending_received:
-		break;
-	case ro_message_received:
-		break;
-	case ro_readings_received:
-		break;
-	default:
-		break;
-	}
-
-}
+{
+	if (millis() -lastRead > 3000) {
+		readSensor();
+		temperature = DHT.temperature;
+		humidity = DHT.humidity;
+		Serial.println("Send to Serial");
+		sendToXbee();
+		lastRead = millis();
+		if (!updatedTime) {
+			Serial.println("Not updated");
+			Serial1.write("U");
+		}
 
 void setNewDeviceName(char * deviceName) {
 	writeDeviceNametoEEPROM(deviceName);
 	screen.setDeviceName(deviceName);
-}
+	}
 
 void getButton() {};
 
