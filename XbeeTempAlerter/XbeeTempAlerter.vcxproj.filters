@@ -21,7 +21,7 @@
     <ClInclude Include="time.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Visual Micro\.XBeeTempAlerter.vsarduino.h">
+    <ClInclude Include="__vm\.XbeeTempAlerter.vsarduino.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

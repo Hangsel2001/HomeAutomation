@@ -5,7 +5,7 @@
 	        all non-arduino files created by visual micro and all visual studio project or solution files can be freely deleted and are not required to compile a sketch (do not delete your own code!).
 	        note: debugger breakpoints are stored in '.sln' or '.asln' files, knowledge of last uploaded breakpoints is stored in the upload.vmps.xml file. Both files are required to continue a previous debug session without needing to compile and upload again
 	
-	Hardware: SparkFun Pro Micro 5V/16MHz, Platform=avr, Package=sparkfun
+	Hardware: Arduino/Genuino Micro, Platform=avr, Package=arduino
 */
 
 #ifndef _VSARDUINO_H_
@@ -13,13 +13,13 @@
 #define __AVR_ATmega32u4__
 #define __AVR_ATmega32U4__
 #define F_CPU 16000000L
-#define ARDUINO 161
-#define ARDUINO_AVR_PROMICRO16
+#define ARDUINO 10605
+#define ARDUINO_AVR_MICRO
 #define ARDUINO_ARCH_AVR
-#define USB_VID 0x1B4F
-#define USB_PID 0x9206
-#define USB_MANUFACTURER 
+#define USB_VID 0x2341
+#define USB_PID 0x8037
 #define __cplusplus
+#define __AVR__
 #define __inline__
 #define __asm__(x)
 #define __extension__
@@ -86,9 +86,9 @@ extern "C" void __cxa_pure_virtual() {;}
 #define portOutputRegister(P)
 #define portInputRegister(P)
 #define portModeRegister(P)
-#include <XbeeTempAlerter.ino>
-#include <dht.cpp>
-#include <dht.h>
-#include <time.cpp>
-#include <time.h>
+#include <..\XbeeTempAlerter\XbeeTempAlerter.ino>
+#include <..\XbeeTempAlerter\dht.cpp>
+#include <..\XbeeTempAlerter\dht.h>
+#include <..\XbeeTempAlerter\time.cpp>
+#include <..\XbeeTempAlerter\time.h>
 #endif

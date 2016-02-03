@@ -33,7 +33,8 @@
     <Compile Include="dbcontext.js" />
     <Compile Include="server.js" />
     <Compile Include="settings.js" />
-    <Compile Include="tests\test.js">
+    <Compile Include="tests\MySQL-Mock.js" />
+    <Compile Include="tests\tests.js">
       <SubType>Code</SubType>
       <TestFramework>Mocha</TestFramework>
     </Compile>

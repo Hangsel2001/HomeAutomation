@@ -31,13 +31,14 @@ bool pendingData = false;
 
 void setup()
 {
+  pinMode(BUTTON_PIN, INPUT_PULLUP);
 	delay(3000);
 	lcd.begin(16, 2);
 	Serial.begin(9600);
 	Serial.println("DHT TEST PROGRAM ");
 	Serial.print("LIBRARY VERSION: ");
 	Serial.println(DHT_LIB_VERSION);
-	Serial.println();
+	Serial.println();   
 	Serial.println("Type,\tstatus,\tHumidity (%),\tTemperature (C)");
 	Serial1.begin(9600);
 	Serial1.write("U");
@@ -143,13 +144,15 @@ void readSerial() {
 
 void loop()
 {
+     Serial.println(digitalRead(BUTTON_PIN));
 	if (millis() -lastRead > 3000) {
 		readSensor();
 		temperature = DHT.temperature;
 		humidity = DHT.humidity;
 		Serial.println("Send to Serial");
-		sendToXbee();
+	sendToXbee();
 		lastRead = millis();
+ 
 		if (!updatedTime) {
 			Serial.println("Not updated");
 			Serial1.write("U");
