@@ -3,23 +3,25 @@ var SerialPort = require('serialport').SerialPort;
 var xbee_api = require('xbee-api');
 var mysql = require('mysql');
 var dateFormat = require('dateformat');
-var connection = mysql.createConnection({
-    host     : '192.168.1.28',
-    user     : 'root',
-    password : 'Vulcan2001!',
-    database : 'measurements'
-});
+//var connection = mysql.createConnection({
+//    host     : '192.168.1.28',
+//    user     : 'root',
+//    password : 'Vulcan2001!',
+//    database : 'measurements'
+//});
 
-connection.connect();
+//connection.connect();
 
 var C = xbee_api.constants;
+
+var serialBusy = false;
 
 var xbeeAPI = new xbee_api.XBeeAPI({
     api_mode: 1
 });
 
 //var address = "/dev/ttyUSB0";
-var address = "COM4";
+var address = "COM7";
 
 var serialport = new SerialPort(address, {
     baudrate: 9600,
@@ -27,21 +29,38 @@ var serialport = new SerialPort(address, {
 });
 
 var devices = [];
-devices["0013a20040d87029"] = {name:"Verkstad", address:"0013a20040d87029"};
+var deviceNames = [];
+deviceNames["0013a20040d87029"] = {name:"Car Port", address:"0013a20040d87029"};
 
-var sendCurrentTime = function (address) {
-    var seconds = Math.floor(Date.now() / 1000);
-    seconds += 60 * 60 * 2;
-    var bytes = [2, seconds >> 24, seconds >> 16 & 0xff, seconds >> 8 & 0xff, seconds & 0xff];
+var sendCurrentTime = function (address, done) {
+    var bytes = dateToBytes(Date.now());
     serialport.write(xbeeAPI.buildFrame({
         type: 0x10, // xbee_api.constants.FRAME_TYPE.ZIGBEE_TRANSMIT_REQUEST 
         id: 0x01, // optional, nextFrameId() is called per default 
         destination64: address,
         options: 0x00, // optional, 0x00 is default 
         data: bytes // Can either be string or byte array. 
-    }));
-    console.log(seconds);
+    }), done);
 };
+
+var sendDeviceName = function (address) {
+    if (deviceNames[address]) {
+        
+        serialport.write(xbeeAPI.buildFrame({
+            type: 0x10, // xbee_api.constants.FRAME_TYPE.ZIGBEE_TRANSMIT_REQUEST 
+            id: 0x01, // optional, nextFrameId() is called per default 
+            destination64: address,
+            options: 0x00, // optional, 0x00 is default 
+            data: String.fromCharCode(1) + deviceNames[address].name + String.fromCharCode(4) // Can either be string or byte array. 
+        }));
+    };
+};
+
+var dateToBytes = function (date) { 
+    var seconds = Math.floor(date / 1000);
+    seconds += 60 * 60 * 2;
+    return  [2, seconds >> 24, seconds >> 16 & 0xff, seconds >> 8 & 0xff, seconds & 0xff];
+}
 
 var lastLog = {};
 
@@ -73,7 +92,14 @@ var logToDb = function (measurements) {
     
 };
 
-
+var initDevice = function (address) {
+    console.log("Update current time for " + address)
+    sendCurrentTime(address, function () {
+        console.log("Send device name for " + address);
+        sendDeviceName(address);
+    });
+    devices.push(address);
+}
 
 xbeeAPI.on("frame_object", function (frame) {
 	var readTempFromFrame = function (data) {
@@ -91,9 +117,7 @@ xbeeAPI.on("frame_object", function (frame) {
 	}
 
     if (devices.indexOf(frame.remote64) === -1) {
-        console.log("Update current time for " + frame.remote64)
-        sendCurrentTime(frame.remote64);
-        devices.push(frame.remote64);
+        initDevice(frame.remote64);
     }
 
     if (frame.data && frame.data.length) {
@@ -114,19 +138,27 @@ xbeeAPI.on("frame_object", function (frame) {
                     value = (mostSignificant << 8 | leastSignificant) / 100;
                     measurements[measurementsType] = value;
                     break;
-
-                default:
-                    index++;
-                    break;
                 case "U":
                     sendCurrentTime(frame.remote64);
                     index++;
+                    break;
+                case "N":
+                    sendDeviceName(frame.remote64);
+                    index++;
+                    break;
+                default:
+                    index++;
+                    break;
+                
+
             }
         }
-        logToDb(measurements);
+  //      logToDb(measurements);
         console.log(measurements);
     }
 });
 
+
 console.log("Väntar...");
+
 

@@ -13,12 +13,13 @@
 #define __AVR_ATmega32u4__
 #define __AVR_ATmega32U4__
 #define F_CPU 16000000L
-#define ARDUINO 165
+#define ARDUINO 10605
 #define ARDUINO_AVR_MICRO
 #define ARDUINO_ARCH_AVR
 #define USB_VID 0x2341
 #define USB_PID 0x8037
-#define __cplusplus
+#define __cplusplus 201103L
+#define __AVR__
 #define __inline__
 #define __asm__(x)
 #define __extension__
@@ -85,13 +86,13 @@ extern "C" void __cxa_pure_virtual() {;}
 #define portOutputRegister(P)
 #define portInputRegister(P)
 #define portModeRegister(P)
-#include <XbeeTempAlerter.ino>
-#include <RadioOperator.cpp>
-#include <RadioOperator.h>
-#include <ScreenHandler.cpp>
-#include <ScreenHandler.h>
-#include <dht.cpp>
-#include <dht.h>
-#include <time.cpp>
-#include <time.h>
+#include <..\XbeeTempAlerter\XbeeTempAlerter.ino>
+#include <..\XbeeTempAlerter\RadioOperator.cpp>
+#include <..\XbeeTempAlerter\RadioOperator.h>
+#include <..\XbeeTempAlerter\ScreenHandler.cpp>
+#include <..\XbeeTempAlerter\ScreenHandler.h>
+#include <..\XbeeTempAlerter\dht.cpp>
+#include <..\XbeeTempAlerter\dht.h>
+#include <..\XbeeTempAlerter\time.cpp>
+#include <..\XbeeTempAlerter\time.h>
 #endif

@@ -18,6 +18,7 @@ double temperature;
 double humidity;
 unsigned long lastRead = 0;
 unsigned long lastChange = 0;
+char deviceNameBuffer[9];
 
 bool updatedTime = false;
 bool pendingData = false;
@@ -27,23 +28,30 @@ void setup()
 {
 	pinMode(BUTTON_PIN, INPUT_PULLUP);
 
+	delay(1000);
+	Serial.begin(9600);
+	Serial.println("XbeeTempAlerter");
+	Serial.println("Ver 0.1 2015-10-03");
+
 	Serial1.begin(9600);
-	radioOperator.requestCurrentTime();
+//	Serial.println("Requesting Time");
+//	radioOperator.requestCurrentTime();
+	Serial.println("Requesting Name");
+	radioOperator.requestDeviceName();
+	Serial.println("Init thermometer");
 
 	delay(3000); // give DHT a chance to get started before proceeding
 
 	lcd.begin(16, 2);
 
-	Serial.begin(9600);
-	Serial.println("XbeeTempAlerter");
-	Serial.println("Ver 0.1 2015-10-03");
 
-	screen.setDeviceName(loadDeviceNameFromEEPROM());
+	loadDeviceNameFromEEPROM(deviceNameBuffer);
+
+	screen.setDeviceName(deviceNameBuffer);
 }
 
-char * loadDeviceNameFromEEPROM()
+void loadDeviceNameFromEEPROM(char * deviceName)
 {
-	char deviceName[] = "        ";
 	for (int i = 0; i < 8; i++)
 	{
 		deviceName[i] = EEPROM.read(i);
@@ -51,8 +59,10 @@ char * loadDeviceNameFromEEPROM()
 		Serial.print(i);
 		Serial.print(" : ");
 		Serial.println(deviceName[i]);
+		
 	}
-	return deviceName;
+	deviceName[8] = 0;
+	Serial.println(deviceName);
 }
 
 void writeDeviceNametoEEPROM(char* deviceName)
@@ -73,27 +83,32 @@ void loop()
 	if (millis() - lastRead > 3000) {
 		
 		getReadings();
+		printReadings();
 		transmitReadings();
-
 		lastRead = millis();
 	}
 
 	getIncoming();
 	getButton();
+	screen.Do();
 
 
 }
 
 void getReadings() {
 	dhtStatus = DHT.read22(DHT22_PIN);
-	Serial.print("Status: ");
-	Serial.println(dhtStatus);
+
 
 	if (dhtStatus == DHTLIB_OK)
 	{
 		temperature = DHT.temperature;
 		humidity = DHT.humidity;
 	}
+}
+
+void printReadings() {
+	screen.setTopReading(temperature, READING_TEMPERATURE);
+	screen.setBottomReading(humidity, READING_HUMIDITY);
 }
 
 void transmitReadings()
@@ -111,12 +126,17 @@ void transmitReadings()
 void getIncoming()
 {
 	int status = radioOperator.available();
+	if (status != 0) {
+		Serial.print("Status: ");
+		Serial.println(status);
+	}
 	switch (status)
 	{
 	case ro_time_received:
 		screen.setCurrentTime(radioOperator.getTime());
 		break;
 	case ro_name_received:
+		Serial.println("ro_name_received");
 		setNewDeviceName(&radioOperator.getDeviceName());
 		break;
 	case ro_message_pending_received:
