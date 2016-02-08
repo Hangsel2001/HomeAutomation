@@ -21,6 +21,12 @@
     <ClInclude Include="time.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+<<<<<<< HEAD
+=======
+    <ClInclude Include="__vm\.XbeeTempAlerter.vsarduino.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+>>>>>>> origin/master
     <ClInclude Include="RadioOperator.h">
       <Filter>Header Files</Filter>
     </ClInclude>

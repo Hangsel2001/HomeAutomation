@@ -68,7 +68,7 @@ var logToDb = function (measurements) {
     var write = function (type, value) {
         if (lastLog[type] == undefined) {
             lastLog[type] = 0;
-		}
+        }
 		var deviceName = devices[measurements.address].name;
         var now = Date(Date.now());
         var query = "REPLACE INTO current_measurements (time, devicename, type, value) VALUES ('" + dateFormat(now, 'yyyy-mm-dd HH:MM:ss')  +"', '" + deviceName + "', '" + type+ "', " + value + ")";
@@ -107,7 +107,7 @@ xbeeAPI.on("frame_object", function (frame) {
 		var leastSignificant = data[++index];
 		var isNegative = false;
 		index++;
-		
+
 		value = (mostSignificant << 8 | leastSignificant);
 		if (mostSignificant & 0x80) {
 			value = value - 0x10000;
@@ -121,7 +121,7 @@ xbeeAPI.on("frame_object", function (frame) {
     }
 
     if (frame.data && frame.data.length) {
-		console.log("Received data: " + frame.data);
+        console.log("Received data: " + frame.data);
         var index = 0;
 		var measurements = { address: frame.remote64};
         while (index < frame.data.length) {

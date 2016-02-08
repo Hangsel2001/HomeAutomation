@@ -18,7 +18,11 @@
 #define ARDUINO_ARCH_AVR
 #define USB_VID 0x2341
 #define USB_PID 0x8037
+<<<<<<< HEAD:XbeeTempAlerter/__vm/.XbeeTempAlerter.vsarduino.h
 #define __cplusplus 201103L
+=======
+#define __cplusplus
+>>>>>>> origin/master:XbeeTempAlerter/__vm/.XbeeTempAlerter.vsarduino.h
 #define __AVR__
 #define __inline__
 #define __asm__(x)
@@ -87,10 +91,13 @@ extern "C" void __cxa_pure_virtual() {;}
 #define portInputRegister(P)
 #define portModeRegister(P)
 #include <..\XbeeTempAlerter\XbeeTempAlerter.ino>
+<<<<<<< HEAD:XbeeTempAlerter/__vm/.XbeeTempAlerter.vsarduino.h
 #include <..\XbeeTempAlerter\RadioOperator.cpp>
 #include <..\XbeeTempAlerter\RadioOperator.h>
 #include <..\XbeeTempAlerter\ScreenHandler.cpp>
 #include <..\XbeeTempAlerter\ScreenHandler.h>
+=======
+>>>>>>> origin/master:XbeeTempAlerter/__vm/.XbeeTempAlerter.vsarduino.h
 #include <..\XbeeTempAlerter\dht.cpp>
 #include <..\XbeeTempAlerter\dht.h>
 #include <..\XbeeTempAlerter\time.cpp>
