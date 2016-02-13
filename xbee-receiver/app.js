@@ -3,6 +3,7 @@ var SerialPort = require('serialport').SerialPort;
 var xbee_api = require('xbee-api');
 var mysql = require('mysql');
 var dateFormat = require('dateformat');
+var radioOperator
 //var connection = mysql.createConnection({
 //    host     : '192.168.1.28',
 //    user     : 'root',
@@ -43,7 +44,7 @@ var sendCurrentTime = function (address, done) {
     }), done);
 };
 
-var sendDeviceName = function (address) {
+var sendDeviceName = function (address, done) {
     if (deviceNames[address]) {
         
         serialport.write(xbeeAPI.buildFrame({
@@ -52,8 +53,19 @@ var sendDeviceName = function (address) {
             destination64: address,
             options: 0x00, // optional, 0x00 is default 
             data: String.fromCharCode(1) + deviceNames[address].name + String.fromCharCode(4) // Can either be string or byte array. 
-        }));
+        }), done);
     };
+};
+
+var sendMessage = function (address, done) {
+       
+        serialport.write(xbeeAPI.buildFrame({
+            type: 0x10, // xbee_api.constants.FRAME_TYPE.ZIGBEE_TRANSMIT_REQUEST 
+            id: 0x01, // optional, nextFrameId() is called per default 
+            destination64: address,
+            options: 0x00, // optional, 0x00 is default 
+            data: String.fromCharCode(5) + "Detta är ett med\ndelande från M" + String.fromCharCode(4) // Can either be string or byte array. 
+        }), done);
 };
 
 var dateToBytes = function (date) { 
@@ -96,7 +108,9 @@ var initDevice = function (address) {
     console.log("Update current time for " + address)
     sendCurrentTime(address, function () {
         console.log("Send device name for " + address);
-        sendDeviceName(address);
+        sendDeviceName(address, function () {
+            sendMessage(address);
+});     
     });
     devices.push(address);
 }
