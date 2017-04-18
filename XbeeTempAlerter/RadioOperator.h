@@ -8,7 +8,7 @@
 #define ro_readings_received 5
 
 #include <HardwareSerial.h>
-
+// TODO: Reading-struct
 class RadioOperator
 {
 private:
@@ -24,6 +24,7 @@ public:
 	void sendError(int errorId);
 	void sendReadings(double temperature, double humidity);
 	void requestCurrentTime();
+	void requestDeviceName();
 	unsigned long getTime();
 	char& getDeviceName();
 };

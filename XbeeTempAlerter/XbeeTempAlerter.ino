@@ -18,6 +18,7 @@ double temperature;
 double humidity;
 unsigned long lastRead = 0;
 unsigned long lastChange = 0;
+char deviceNameBuffer[9];
 
 bool updatedTime = false;
 bool pendingData = false;
@@ -25,31 +26,32 @@ bool pendingData = false;
 
 void setup()
 {
-	delay(3000);
-	lcd.begin(16, 2);
+	pinMode(BUTTON_PIN, INPUT_PULLUP);
+
+	delay(1000);
 	Serial.begin(9600);
-	Serial.println("DHT TEST PROGRAM ");
-	Serial.print("LIBRARY VERSION: ");
-	Serial.println(DHT_LIB_VERSION);
-	Serial.println();
-	Serial.println("Type,\tstatus,\tHumidity (%),\tTemperature (C)");
+	Serial.println("XbeeTempAlerter");
+	Serial.println("Ver 0.1 2015-10-03");
+
 	Serial1.begin(9600);
-	radioOperator.requestCurrentTime();
+//	Serial.println("Requesting Time");
+//	radioOperator.requestCurrentTime();
+	Serial.println("Requesting Name");
+	radioOperator.requestDeviceName();
+	Serial.println("Init thermometer");
 
 	delay(3000); // give DHT a chance to get started before proceeding
 
 	lcd.begin(16, 2);
 
-	Serial.begin(9600);
-	Serial.println("XbeeTempAlerter");
-	Serial.println("Ver 0.1 2015-10-03");
 
-	screen.setDeviceName(loadDeviceNameFromEEPROM());
+	loadDeviceNameFromEEPROM(deviceNameBuffer);
+
+	screen.setDeviceName(deviceNameBuffer);
 }
 
-char * loadDeviceNameFromEEPROM()
+void loadDeviceNameFromEEPROM(char * deviceName)
 {
-	char deviceName[] = "        ";
 	for (int i = 0; i < 8; i++)
 	{
 		deviceName[i] = EEPROM.read(i);
@@ -57,8 +59,10 @@ char * loadDeviceNameFromEEPROM()
 		Serial.print(i);
 		Serial.print(" : ");
 		Serial.println(deviceName[i]);
+		
 	}
-	return deviceName;
+	deviceName[8] = 0;
+	Serial.println(deviceName);
 }
 
 void writeDeviceNametoEEPROM(char* deviceName)
@@ -77,37 +81,42 @@ void writeDeviceNametoEEPROM(char* deviceName)
 void loop()
 {
 	if (millis() - lastRead > 3000) {
-
+		
 		getReadings();
+		printReadings();
 		transmitReadings();
-
 		lastRead = millis();
-}
+	}
 
 	getIncoming();
 	getButton();
+	screen.Do();
 
-	
+
 }
-	
+
 void getReadings() {
 	dhtStatus = DHT.read22(DHT22_PIN);
-	Serial.print("Status: ");
-	Serial.println(dhtStatus);
-				
+
+
 	if (dhtStatus == DHTLIB_OK)
 	{
 		temperature = DHT.temperature;
 		humidity = DHT.humidity;
-			}			
-		}
+	}
+}
+
+void printReadings() {
+	screen.setTopReading(temperature, READING_TEMPERATURE);
+	screen.setBottomReading(humidity, READING_HUMIDITY);
+}
 
 void transmitReadings()
 {
 	if (dhtStatus != DHTLIB_OK)
 	{
 		radioOperator.sendError(dhtStatus);
-		}
+	}
 	else
 	{
 		radioOperator.sendReadings(temperature, humidity);
@@ -117,24 +126,35 @@ void transmitReadings()
 void getIncoming()
 {
 	int status = radioOperator.available();
+	if (status != 0) {
+		Serial.print("Status: ");
+		Serial.println(status);
+	}
 	switch (status)
-{
-	if (millis() -lastRead > 3000) {
-		readSensor();
-		temperature = DHT.temperature;
-		humidity = DHT.humidity;
-		Serial.println("Send to Serial");
-		sendToXbee();
-		lastRead = millis();
-		if (!updatedTime) {
-			Serial.println("Not updated");
-			Serial1.write("U");
-		}
+	{
+	case ro_time_received:
+		screen.setCurrentTime(radioOperator.getTime());
+		break;
+	case ro_name_received:
+		Serial.println("ro_name_received");
+		setNewDeviceName(&radioOperator.getDeviceName());
+		break;
+	case ro_message_pending_received:
+		break;
+	case ro_message_received:
+		break;
+	case ro_readings_received:
+		break;
+	default:
+		break;
+	}
+
+}
 
 void setNewDeviceName(char * deviceName) {
 	writeDeviceNametoEEPROM(deviceName);
 	screen.setDeviceName(deviceName);
-	}
+}
 
 void getButton() {};
 
