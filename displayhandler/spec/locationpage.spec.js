@@ -78,5 +78,13 @@ describe("LocationPage with 16x2 LCD", () => {
             });
             expect(page.getDisplay()).toBe("13:00:10  24.3\xB0C\nKontoret 1023hPa");
         })
+
+        it ("shows dashes when no values", ()=>{      
+                page = new LocationPage({
+                location: "EmptyLoc",
+                types: ["temperature", "atmospheric pressure"]
+            });
+            expect(page.getDisplay()).toBe("13:00:10  ----\xB0C\nEmptyLoc ----hPa");      
+        })
     });
 });

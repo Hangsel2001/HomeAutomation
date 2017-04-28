@@ -36,8 +36,8 @@ function LocationPage(config) {
         if (config.types[index]) {
             let type = config.types[index];
             let info = measurementTypesInfo[type];
-            let val = db.getLatest(config.location, type);
-            let display = justify8((val? val.toFixed(info.decimals) : "") + info.unit);
+            let val = db.getLatest(config.location, type) || "----";
+            let display = justify8(val + info.unit);
             return display;
         } else {
             return justify8("");
