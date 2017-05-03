@@ -1,64 +1,112 @@
 var events = require('events');
 var defaults = require('defaults');
-var db = require('./measurementsdb');
+var db = new(require('./measurementsdb'))();
+const EMPTY = "----";
 
-var measurementTypesInfo = { "temperature":
-    {
-    decimals : 1,
-    unit : "\xB0C"
-},
+var measurementTypesInfo = {
+    "temperature": {
+        decimals: 1,
+        unit: "\xB0C"
+    },
     "atmospheric pressure": {
         decimals: 0,
         unit: "hPa"
+    },
+    "humidity": {
+        decimals: 1,
+        unit: "%"
     }
 };
 
-function LocationPage(config) {    
-    config = defaults(config, {location: "", types:["temperature"]})
+function LocationPage(config) {
+
+    config = defaults(config, {
+        location: "",
+        types: ["temperature"]
+    })
+    var firstM = "",
+        secondM = "";
     var display = "";
     var that = this;
-    var padZeros = function(value) {
+    var padZeros = function (value) {
         return padString("00", value);
     }
-    var padString = function(filler, value) {
+    var padString = function (filler, value) {
         return (filler + value).slice(-filler.length);
     }
-    var justify8 = function(value) {
+
+    var add8Spaces = function (value) {
+        return (value + "        ").slice(0, 8);
+    }
+
+    var justify8 = function (value) {
         return padString("        ", value);
     }
 
-    this.getTime = function() {
+    this.getTime = function () {
         let time = new Date(Date.now());
-        return padZeros(time.getHours()) + ":" + padZeros(time.getMinutes()) + ":"   + padZeros(time.getSeconds());
+        return padZeros(time.getHours()) + ":" + padZeros(time.getMinutes()) + ":" + padZeros(time.getSeconds());
+    }
+
+    function round(value, precision) {
+        var multiplier = Math.pow(10, precision || 0);
+        return Math.round(value * multiplier) / multiplier;
     }
 
     function getMeasurement(index) {
-        if (config.types[index]) {
+        return new Promise((resolve, reject) => {
+            if (!config.types[index]) {
+                resolve(justify8(""));
+            };
             let type = config.types[index];
             let info = measurementTypesInfo[type];
-            let val = db.getLatest(config.location, type) || "----";
-            let display = justify8(val + info.unit);
-            return display;
-        } else {
-            return justify8("");
-        }
+            db.getLatest(config.location, type).then((val) => {
+                if (val) {
+                    val = round(val, info.decimals);
+                }
+
+                let display = justify8((val || EMPTY) + info.unit);
+                resolve(display);
+
+            })
+        });
     }
 
     this.getDisplay = function () {
-        let firstM = getMeasurement(0);
-        let secondM = getMeasurement(1);        
-        
-        return that.getTime() +firstM + "\n" + justify8(config.location) + secondM;
-    }     
-    setInterval(()=> {
-        let newDisplay=  that.getDisplay();
-  
+
+
+        return that.getTime() + firstM + "\n" + add8Spaces(config.location) + secondM;
+    }
+    this.getMeasurements = () => {
+        let p0 = getMeasurement(0).then((val) => {
+            firstM = val
+        });
+        let p1 = getMeasurement(1).then((val) => {
+            secondM = val
+        });
+        return Promise.all([p0, p1]);
+    }
+    this.handleDisplay = () => {
+        let newDisplay = that.getDisplay();
+
         if (newDisplay !== display) {
             display = newDisplay;
             that.emit("update", display);
         }
-    },500)
+    };
+
+    setInterval(() => {
+            this.handleDisplay();
+        }, 100),
+        setInterval(this.getMeasurements, 5000)
+    db.connect().then(() => {
+        this.getMeasurements().then(() => {
+                this.handleDisplay();
+            }
+
+        )
+    });
 };
 LocationPage.prototype.__proto__ = events.EventEmitter.prototype;
 
-module.exports = LocationPage; 
+module.exports = LocationPage;

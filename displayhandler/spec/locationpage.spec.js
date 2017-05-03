@@ -1,16 +1,25 @@
 let LocationPage = require("../locationpage");
 let db = require("../measurementsdb");
+var Promise = require('promise');
 
 describe("LocationPage with 16x2 LCD", () => {
     let time, page;
+    let measurements = {};
+    let getLatest;
     beforeEach(() => {
         time = new Date(2017, 04, 26, 13, 00, 10);
         jasmine.clock().install();
         jasmine.clock().mockDate(time);
+        spyOn(db.prototype, "connect").and.returnValue(Promise.resolve());
         page = new LocationPage({
             location: "Kontoret"
         });
 
+    })
+    beforeEach(() => {
+        getLatest = spyOn(db.prototype, "getLatest").and.callFake((location, type) => {
+            return new Promise.resolve(measurements[location + " " + type]);
+        })
     })
     afterEach(() => {
         // tk.reset();
@@ -46,45 +55,57 @@ describe("LocationPage with 16x2 LCD", () => {
     })
 
     describe("measurements", () => {
-        let getLatest;
-        let measurements = {
-            "Kontoret temperature": 24.3,
-            "Kontoret atmospheric pressure": 1023
-        }
         beforeEach(() => {
-            getLatest = spyOn(db, "getLatest").and.callFake((location, type) => {
-                return measurements[location +" " +type];
-            })
+            measurements = {
+                "Kontoret temperature": 24.3,
+                "Kontoret atmospheric pressure": 1023
+            }
         })
-        it("fetches measurements from db", () => {
-            let lines = page.getDisplay().split("\n");
-            expect(getLatest).toHaveBeenCalledWith("Kontoret", "temperature");
-            expect(lines[0]).toBe("13:00:10  24.3\xB0C")
+
+
+        it("fetches measurements from db", (done) => {
+            page.on("update", (content) => {
+                let lines = content.split("\n");
+                expect(getLatest).toHaveBeenCalledWith("Kontoret", "temperature");
+                expect(lines[0]).toBe("13:00:10  24.3\xB0C")
+                done();
+            });
         });
 
-        it("can be configured for correct measurement types", () => {
+        it("can be configured for correct measurement types", (done) => {
             page = new LocationPage({
                 location: "Kontoret",
                 types: ["atmospheric pressure"]
             });
-            let lines = page.getDisplay().split("\n");
-            expect(lines[0]).toBe("13:00:10 1023hPa");
+            page.on("update", (content) => {
+                let lines = content.split("\n");
+                expect(lines[0]).toBe("13:00:10 1023hPa");
+                done();
+            })
+
         });
 
-        it ("can show two measurements", ()=>{
+        it("can show two measurements", (done) => {
             page = new LocationPage({
                 location: "Kontoret",
                 types: ["temperature", "atmospheric pressure"]
             });
-            expect(page.getDisplay()).toBe("13:00:10  24.3\xB0C\nKontoret 1023hPa");
+            page.on("update", (content) => {
+
+                expect(content).toBe("13:00:10  24.3\xB0C\nKontoret 1023hPa");
+                done();
+            });
         })
 
-        it ("shows dashes when no values", ()=>{      
-                page = new LocationPage({
+        it("shows dashes when no values", () => {
+            page = new LocationPage({
                 location: "EmptyLoc",
                 types: ["temperature", "atmospheric pressure"]
             });
-            expect(page.getDisplay()).toBe("13:00:10  ----\xB0C\nEmptyLoc ----hPa");      
+            page.on("update", (content) => {
+                expect(content).toBe("13:00:10  ----\xB0C\nEmptyLoc ----hPa");
+                done()
+            });
         })
     });
 });

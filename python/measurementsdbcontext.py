@@ -4,7 +4,7 @@ from datetime import datetime
 
 class MeasurementsDBContext:
 	def __init__(self):
-		self.db = MySQLdb.connect("localhost", "root", "Vulcan2001!", "measurements")
+		self.db = MySQLdb.connect("localhost", "dbreader", "dbreaderpass", "measurements")
 		self.curs=self.db.cursor()
 		self.lastlog = dict()
 		self.logspan = 30

@@ -18,6 +18,8 @@
     "jasmine-spec-reporter": "^4.0.0"
   },
   "dependencies": {
-    "defaults": "^1.0.3"
+    "defaults": "^1.0.3",
+    "mysql": "^2.13.0",
+    "promise": "^7.1.1"
   }
 }
