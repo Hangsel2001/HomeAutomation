@@ -1,19 +1,10 @@
-// const Measurementsdb = require("./measurementsdb");
-// const db = new Measurementsdb();
-// db.connect().then(() => {
-//     setInterval(() => {
-//         db.getLatest("Kontor", "temperature").then((data) => {
-//             console.log(data);
-//         });
-//     }, 1000);
-// }, (err) => {
-//     console.log(err);
-// });
-const locPage= require("./locationpage");
-let page = new locPage({
+const lcd = new (require("./rgbpiplate"))();
+const LocationPage= require("./locationpage");
+let page = new LocationPage({
     location: "Kontor",
     types: ["temperature", "atmospheric pressure"]
 });
+lcd.backlight(3);
 page.on('update',(text)=> {
-    console.log(text);
+    lcd.message(text);
 })
