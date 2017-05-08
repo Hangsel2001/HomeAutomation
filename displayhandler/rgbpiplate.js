@@ -1,5 +1,7 @@
 "use strict";
 const EventEmitter = require('events').EventEmitter;
+const PiPlate = require('adafruit-i2c-lcd').plate;
+
 const Chars = {
     Play: [0,8,12,14,12,8,0],
     Pause: [0,27,27,27,27,27,0],
@@ -9,17 +11,23 @@ const Chars = {
     "Ö": [10,14,17,17,17,17,14]
 }
 class RGBPiPlate extends EventEmitter {
+
     constructor() {
         super();
+        this.lcd = new PiPlate(0, 0x20);
     }
     clear() {
-        console.log("clear");
+        this.lcd.clear();
+     //   console.log("clear");
     };
     message(text) {
-        console.log(text);
+        this.lcd.message(text, true);
+     
+     //   console.log(text);
     };
     backlight(col) {
-        console.log(col);
+        this.lcd.backlight(col);
+     //   console.log(col);
     };
 };  
 module.exports = RGBPiPlate;
