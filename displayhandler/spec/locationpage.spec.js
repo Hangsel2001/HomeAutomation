@@ -97,7 +97,7 @@ describe("LocationPage with 16x2 LCD", () => {
             });
         })
 
-        it("shows dashes when no values", () => {
+        it("shows dashes when no values", (done) => {
             page = new LocationPage({
                 location: "EmptyLoc",
                 types: ["temperature", "atmospheric pressure"]

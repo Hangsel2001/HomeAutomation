@@ -10,6 +10,10 @@ const Chars = {
     "å": [4,0,14,1,15,17,15],
     "Ö": [10,14,17,17,17,17,14]
 }
+
+const Replaces = {
+   "\xB0": "\xDF"
+}
 class RGBPiPlate extends EventEmitter {
 
     constructor() {
@@ -18,16 +22,12 @@ class RGBPiPlate extends EventEmitter {
     }
     clear() {
         this.lcd.clear();
-     //   console.log("clear");
     };
     message(text) {
         this.lcd.message(text, true);
-     
-     //   console.log(text);
     };
     backlight(col) {
         this.lcd.backlight(col);
-     //   console.log(col);
     };
 };  
 module.exports = RGBPiPlate;

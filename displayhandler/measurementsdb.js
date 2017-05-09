@@ -28,7 +28,7 @@ function MeasurementsDb() {
                 if (error) {
                     reject(error)
                 };
-                if (results.length > 0) {
+                if (results && results.length > 0) {
                     resolve(results[0].value);
                 } else {
                     resolve(null);

@@ -6,7 +6,7 @@ const EMPTY = "----";
 var measurementTypesInfo = {
     "temperature": {
         decimals: 1,
-        unit: "\xDFC" // försök återgå till \xB0 senare
+        unit:"\xB0C" // "\xDFC"
     },
     "atmospheric pressure": {
         decimals: 0,
