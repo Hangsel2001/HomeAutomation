@@ -19,11 +19,21 @@ class RGBPiPlate extends EventEmitter {
     constructor() {
         super();
         this.lcd = new PiPlate(0, 0x20);
+        this.lcd.on("button_down", (button)=> {
+            button = this.lcd.buttonName(button);
+            console.log(button);
+            if (button === "LEFT") {
+                this.emit("left");
+            } else if (button === "RIGHT") {
+                this.emit("right");
+            }
+        })
     }
     clear() {
         this.lcd.clear();
     };
     message(text) {
+        text=  text.replace("\xB0","\xDF");
         this.lcd.message(text, true);
     };
     backlight(col) {
