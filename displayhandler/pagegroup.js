@@ -23,6 +23,8 @@ class PageGroup extends EventEmitter {
         this.activePage = this.pages[index];
 
         this.activePage.on("update", this.pageCallback);
+        this.emit("setup", this.activePage.getConfig());
+
     }
     getDisplay() {
         return this.activePage.getDisplay();

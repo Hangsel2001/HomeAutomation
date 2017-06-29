@@ -36,5 +36,6 @@ class ConsolePlate extends EventEmitter {
     backlight(col) {
         console.log("color: " + col);
     };
+    setup() {}
 };
 module.exports = ConsolePlate;
