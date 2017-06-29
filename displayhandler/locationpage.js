@@ -95,7 +95,7 @@ function LocationPage(config) {
         }
     };
 
-    this.getConfig() = ()=> {};
+    this.getConfig = ()=> {};
 
     setInterval(() => {
             this.handleDisplay();

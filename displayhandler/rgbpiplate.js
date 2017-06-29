@@ -39,8 +39,8 @@ class RGBPiPlate extends EventEmitter {
     backlight(col) {
         this.lcd.backlight(col);
     };
-    config(data) {
-        if (data.chars) {
+    setup(data) {    
+        if (data && data.chars) {
             let chars = data.chars;
             for(let i=0;i<8;i++) {
                 this.lcd.createChar(i+1, chars[i]);
