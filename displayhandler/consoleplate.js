@@ -31,6 +31,15 @@ class ConsolePlate extends EventEmitter {
         console.log("clear");
     };
     message(text) {
+        text = text
+        .replace(/\x01/g, "Ö")
+        .replace(/\x02/g, "H")
+        .replace(/\x03/g, "|")
+        .replace(/\x04/g, "\\")
+        .replace(/\x05/g, "\\")
+        .replace(/\x06/g, "-")
+        .replace(/\x07/g, "/")
+        .replace(/\x08/g, "/")
         console.log(text);
     };
     backlight(col) {

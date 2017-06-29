@@ -2,8 +2,9 @@
 const EventEmitter = require('events').EventEmitter;
 
 class RailwayPage extends EventEmitter {
-    constructor() {
+    constructor(config) {
         super();
+        this.socket = config.socket;
     }
     getDisplay() {
         return '\x06\x06\x06\x06\x07\x06\x06\x01\x02\x06\x06\x04\x06\x06\x05\n\x06\x06\x06\x06\x08       \x03  \x03';

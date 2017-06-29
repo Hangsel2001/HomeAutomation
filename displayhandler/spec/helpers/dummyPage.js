@@ -13,6 +13,7 @@ class DummyPage extends EventEmitter {
     getDisplay() {
         return (this.message || "DummyPage") + "\n" + this.counter;
     }
+    getConfig() {};
 }
 
 module.exports = DummyPage;
