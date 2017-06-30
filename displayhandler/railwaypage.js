@@ -4,10 +4,23 @@ const EventEmitter = require('events').EventEmitter;
 class RailwayPage extends EventEmitter {
     constructor(config) {
         super();
-        this.socket = config.socket;
+        this.socket=config.socket;
+        this.state={};
+        this.socket.on("block",(data)=>{
+        	this.state[data.name]=data;
+        });
+        this.tracks ='\x06\x06\x06\x06\x07\x06\x06\x06\x06\x06\x06\x04\x06\x06\x05\n\x06\x06\x06\x06\x08       \x03  \x03';
     }
     getDisplay() {
-        return '\x06\x06\x06\x06\x07\x06\x06\x01\x02\x06\x06\x04\x06\x06\x05\n\x06\x06\x06\x06\x08       \x03  \x03';
+        let val = this.tracks;
+        let ol =this.state.OuterLeft;
+        if (ol) {
+        
+         if (ol.loco && ol.status === "in") {
+         	val = val.substring(0,1)+"\x01\x02"+val.substring(3);
+         	}
+        }
+        return val;
     };
     getConfig() {
         return {
