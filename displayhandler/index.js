@@ -11,7 +11,7 @@ pages.on('setup',(config)=> {
     lcd.setup(config);
     lcd.message(pages.getDisplay());
 })
-pages.setPages( [new RailwayPage(),
+pages.setPages( [RailwayPage.getPage(),
     new LocationPage({
     location: "Kontor",
     types: ["temperature", "atmospheric pressure"]
@@ -30,6 +30,6 @@ lcd.on("right", ()=>{
     pages.next();
 })
 pages.on('update',(text)=> {
-	console.log(text);
+	// console.log(text);
     lcd.message(text);
 })
