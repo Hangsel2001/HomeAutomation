@@ -4,6 +4,7 @@ const lcd = new Plate();
 const LocationPage= require("./locationpage");
 const RailwayPage = require("./railwaypage");
 const PageGroup = require("./pagegroup");
+const HuePage = require("./huepage");
 
 let pages = new PageGroup();
 pages.on('setup',(config)=> {
@@ -19,7 +20,7 @@ pages.setPages( [RailwayPage.getPage(),
 new LocationPage({
     location: "Verkstad",
     types: ["temperature", "humidity"]
-})
+}), HuePage.getPage()
 ]);
 lcd.backlight(7);
 lcd.message(pages.getDisplay());
