@@ -12,20 +12,34 @@ class HuePage extends EventEmitter {
             host:     config.host,        
             username: config.username        
           });     
-          setInterval(() => {this.getHue()}, 5000)     
+          setInterval(() => {this.getHue()}, 2000);
+          setInterval(() => {this.getReachable()}, 2000);
           this.scene = config.scenes[0];
           this.getHue();
-          this.display = config.header + "\n" + this.scene.name;
+          this.display = "INIT HUE PAGE\nLOADING...";
     }
 
-    getHue() {
+    async getReachable() {
+        let lights = await this.client.lights.getAll();
+        const g = await this.client.groups.getById(this.config.group)   ;
+        const lightsInGroup = lights.filter(v =>  g.lightIds.find(id => id === v.id ) !== undefined );
+        this.unreachables = lightsInGroup.find(l => l.reachable === false) !== undefined;
+    }
+
+    async getHue() {
         
-        this.client.groups.getById(this.config.group).then((g)=> {
-            const newDisp =  g.brightness + " " + g.colorTemp;
-            if (newDisp !== this.display);
-            this.display = newDisp;
+        try {
+        const g = await this.client.groups.getById(this.config.group)   
+        const newDisp =  this.config.header + ": " + this.scene.name + "\n" + 
+        (this.unreachables ? "-" : " ") + 
+        (g.on ? "O" : "X") + " B:" + g.brightness + " C:" + g.colorTemp;
+        if (newDisp !== this.display) {
+            this.display = newDisp;                
             this.emit("update", this.getDisplay());
-        })
+        }                    
+    } catch (ex) {
+        console.log(ex);
+    }
     }
 
     getDisplay() {
@@ -38,7 +52,7 @@ class HuePage extends EventEmitter {
         return new HuePage({
             host: "192.168.1.237",
             username: 'sEzJsrSODeyWHRnlFinJ9Pzb28bR3j7rVeo30H-s',
-            header: "Kontoret",
+            header: "Kontor",
             group: 2,
             scenes: [                
                 {name: "Dag", on:true, brightness:255, colorTemp:233},

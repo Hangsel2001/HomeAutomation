@@ -196,3 +196,6 @@ DBTester/.ntvs_analysis.dat
 xbee-receiver/.ntvs_analysis.dat
 ModelManifest.xml
 /.vs/SensorNetwork/v15
+!displayhandler/config/default.json
+!displayhandler/config/production.json
+displayhandler/config/**/*
