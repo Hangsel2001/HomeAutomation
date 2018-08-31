@@ -17,6 +17,8 @@ class HuePage extends EventEmitter {
           this.scene = config.scenes[0];
           this.getHue();
           this.display = "INIT HUE PAGE\nLOADING...";
+          this.color = 7;
+          this.colorPending = true;
     }
 
     async getReachable() {
@@ -33,17 +35,43 @@ class HuePage extends EventEmitter {
         const newDisp =  this.config.header + ": " + this.scene.name + "\n" + 
         (this.unreachables ? "-" : " ") + 
         (g.on ? "O" : "X") + " B:" + g.brightness + " C:" + g.colorTemp;
+        let newColor = this.getColorFromColorTemp(g.colorTemp);
+        if (newColor !== this.color) {
+            this.color = newColor;
+            this.colorPending = true;
+        }
         if (newDisp !== this.display) {
-            this.display = newDisp;                
+            this.display = newDisp;                            
             this.emit("update", this.getDisplay());
-        }                    
+        } else if (this.colorPending){
+            this.emit("update", this.getDisplay());
+        }
     } catch (ex) {
         console.log(ex);
     }
     }
 
+    getColorFromColorTemp(colorTemp) {
+        if (colorTemp < 200) {
+            return 3
+        } else if (colorTemp <250) {
+            return 5;
+        } else if (colorTemp <350) {
+            return 7
+        } else if (colorTemp < 400) {
+            return 4;
+        } else {
+            return 1;
+        }        
+    }
+
     getDisplay() {
-        return this.display;
+        if (this.colorPending !== null) {            
+            this.colorPending = false;
+            return {color: this.color, text: this.display};
+        } else {
+            return this.display;
+        }        
     }
 
     getConfig() {}

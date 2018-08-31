@@ -16,10 +16,18 @@ describe ("huePage", () => {
             ]
         });
     })
-    it("formats display", async () => {
-        
+    it("formats display", async () => {        
         spyOn(groups.prototype, "getById").and.returnValue(Promise.resolve({on:true, brightness:155, colorTemp:200, reachable:false}));
         await page.getHue();
         expect(page.display).toEqual("Kontor: Dag\n O B:155 C:200");
+    })
+
+    it("adds color when changed", async () => {
+        const spy = spyOn(groups.prototype, "getById").and.returnValue(Promise.resolve({on:true, brightness:155, colorTemp:200, reachable:false}));
+        await page.getHue();
+        expect(page.getDisplay().color).toEqual(5);
+        spy.and.returnValue(Promise.resolve({on:true, brightness:155, colorTemp:355, reachable:false}));
+        await page.getHue();
+        expect(page.getDisplay().color).toEqual(4);
     })
 })

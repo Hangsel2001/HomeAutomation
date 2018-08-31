@@ -22,4 +22,27 @@ describe ("framework tests", ()=> {
 
     });
 
+    it("get string or object", ()=> {
+        expect(typeof "Text").toBe("string");
+        expect(typeof {color:7, text: "Hej"}).toBe("object");
+        expect("Text".color).toBe(undefined);
+        expect("Text".color).toBeFalsy();
+        var obj = {color:7};
+        expect(typeof obj.color).toBe("number");
+        expect(typeof "Text".color).toBe("undefined");
+        
+        let result = hasColor(obj);
+        expect(result).toBeTruthy();
+        expect(hasColor("TEsT")).toBeFalsy();
+    })
+
 })
+
+function hasColor(obj) {
+    if (obj.color) {
+        return true;
+    }
+    else {
+        return false;
+    }    
+}

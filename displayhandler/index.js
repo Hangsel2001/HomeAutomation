@@ -11,9 +11,9 @@ let pages = new PageGroup();
 pages.on('setup',(config)=> {
     console.log("pages.setup")
     lcd.setup(config);
-    lcd.message(pages.getDisplay());
+    handleDisplayUpdate(pages.getDisplay());
 })
-pages.setPages( [RailwayPage.getPage(),
+pages.setPages( [HuePage.getPage(), RailwayPage.getPage(),
     new LocationPage({
     location: "Kontor",
     types: ["temperature", "atmospheric pressure"]
@@ -21,10 +21,8 @@ pages.setPages( [RailwayPage.getPage(),
 new LocationPage({
     location: "Verkstad",
     types: ["temperature", "humidity"]
-}), HuePage.getPage()
+})
 ]);
-lcd.backlight(7);
-lcd.message(pages.getDisplay());
 lcd.on("left", ()=> {
     pages.prev();
 });
@@ -32,6 +30,14 @@ lcd.on("right", ()=>{
     pages.next();
 })
 pages.on('update',(text)=> {
-	// console.log(text);
-    lcd.message(text);
+	handleDisplayUpdate(text);
 })
+
+function handleDisplayUpdate(text) {
+    if (text.color) {
+        lcd.backlight(text.color);
+        text = text.text;
+    }
+    lcd.message(text);
+}
+
