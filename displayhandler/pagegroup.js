@@ -43,6 +43,16 @@ class PageGroup extends EventEmitter {
         }
         this.setActivePage(newIndex);
     }
+    down() {
+        if (this.activePage.down) {
+            this.activePage.down();
+        }        
+    }
+    up() {
+        if (this.activePage.up) {
+            this.activePage.up();
+        }
+    }
 }
 
 module.exports = PageGroup;

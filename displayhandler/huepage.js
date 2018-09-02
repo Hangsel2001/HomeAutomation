@@ -14,7 +14,8 @@ class HuePage extends EventEmitter {
           });     
           setInterval(() => {this.getHue()}, 2000);
           setInterval(() => {this.getReachable()}, 2000);
-          this.scene = config.scenes[0];
+          this.sceneIndex = 0;
+          this.scene = config.scenes[this.sceneIndex];
           this.getHue();
           this.display = "INIT HUE PAGE\nLOADING...";
           this.color = 7;
@@ -53,13 +54,13 @@ class HuePage extends EventEmitter {
 
     getColorFromColorTemp(colorTemp) {
         if (colorTemp < 200) {
-            return 3
+            return 4
         } else if (colorTemp <250) {
             return 5;
         } else if (colorTemp <350) {
             return 7
         } else if (colorTemp < 400) {
-            return 4;
+            return 3;
         } else {
             return 1;
         }        
@@ -74,7 +75,35 @@ class HuePage extends EventEmitter {
         }        
     }
 
-    getConfig() {}
+    getConfig() {
+        this.colorPending = true;
+    }
+
+    async down() {
+        this.sceneIndex++;
+        await this.updateScene();
+    }
+
+    async updateScene() {
+        this.sceneIndex = (this.config.scenes.length + this.sceneIndex) % this.config.scenes.length;
+        this.scene = this.config.scenes[this.sceneIndex];
+        const g = await this.client.groups.getById(this.config.group);
+        g.brightness = this.scene.brightness || g.brightness;
+        g.colorTemp = this.scene.colorTemp || g.colorTemp;
+        g.on = this.scene.on;
+        await this.save(g);
+
+    }
+
+    async save(g) {
+        // console.log(g);
+        return this.client.groups.save(g);
+    }
+
+    async up() {
+        this.sceneIndex--;
+        await this.updateScene();
+    }
 
     static getPage() {      
         return new HuePage({

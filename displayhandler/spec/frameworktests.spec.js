@@ -36,6 +36,13 @@ describe ("framework tests", ()=> {
         expect(hasColor("TEsT")).toBeFalsy();
     })
 
+    it('should resolve async', async () => {
+        let func = {func :  () =>Promise.resolve("Resolved")};
+        expect(await func.func()).toEqual('Resolved');
+        spyOn(func, "func").and.returnValue("In spy");
+        expect(await func.func()).toEqual('In spy');
+      });
+
 })
 
 function hasColor(obj) {

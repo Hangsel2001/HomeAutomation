@@ -50,4 +50,17 @@ describe("PageGroup", ()=> {
         group.prev();
         expect(group.getDisplay()).toBe(dummy2.getDisplay());
     });
+
+    it("passes down to page", () => {                
+        const dirs = ["down", "up"];
+        for(let dir of dirs) {
+            expect(() => {group[dir]()}).not.toThrowError();
+            dummy1.createMethod(dir);
+            let direction = spyOn(dummy1, dir);
+            group[dir]();        
+            expect(direction).toHaveBeenCalled();
+        }
+        
+    })
+    
 });

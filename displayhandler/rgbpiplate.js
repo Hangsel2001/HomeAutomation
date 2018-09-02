@@ -26,6 +26,12 @@ class RGBPiPlate extends EventEmitter {
                 this.emit("left");
             } else if (button === "RIGHT") {
                 this.emit("right");
+            } else if (button === "UP") {
+                this.emit("up");
+            } else if (button === "DONW") {
+                this.emit("down");
+            } else if (button === "SELECT") {
+                this.emit("select");
             }
         })
     }

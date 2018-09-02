@@ -14,6 +14,10 @@ class DummyPage extends EventEmitter {
         return (this.message || "DummyPage") + "\n" + this.counter;
     }
     getConfig() {};
+    // down() {};    
+    createMethod(name) {
+        this[name] = () => {};
+    }
 }
 
 module.exports = DummyPage;

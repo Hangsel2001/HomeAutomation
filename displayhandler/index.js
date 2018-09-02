@@ -29,6 +29,12 @@ lcd.on("left", ()=> {
 lcd.on("right", ()=>{
     pages.next();
 })
+lcd.on("down", ()=> {
+    pages.down();
+})
+lcd.on("up", ()=> {
+    pages.up();
+})
 pages.on('update',(text)=> {
 	handleDisplayUpdate(text);
 })

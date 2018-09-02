@@ -21,6 +21,12 @@ class ConsolePlate extends EventEmitter {
                 this.emit("left");
             } else if (key.name == "right") {
                 this.emit("right");
+            } else if (key.name == "up") {
+                this.emit("up");
+            } else if (key.name == "down") {
+                this.emit("down");
+            } else if (key.name == "s") {
+                this.emit("select");
             }
         });
 
