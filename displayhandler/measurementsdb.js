@@ -4,9 +4,9 @@ var Promise = require('promise');
 
 function MeasurementsDb() {
     this.connection = mysql.createConnection({
-        host: '192.168.1.40',
+        host: 'localhost',
         user: 'reader',
-        password: 'reader_pass',
+        password: 'readerpass',
         database: 'measurements'
     });
 

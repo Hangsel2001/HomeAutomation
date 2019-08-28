@@ -12,7 +12,8 @@ const Chars = {
 }
 
 const Replaces = {
-   "\xB0": "\xDF"
+   "\xB0": "\xDF",
+   "ä" : "\D1"
 }
 class RGBPiPlate extends EventEmitter {
 
@@ -40,6 +41,7 @@ class RGBPiPlate extends EventEmitter {
     };
     message(text) {
         text=  text.replace("\xB0","\xDF");
+        text = text.replace("ä", "\xE1");
         this.lcd.message(text, true);
     };
     backlight(col) {
