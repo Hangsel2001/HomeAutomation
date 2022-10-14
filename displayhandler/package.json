@@ -14,7 +14,7 @@
     "gulp-plumber": "^1.1.0",
     "jasmine": "^2.6.0",
     "jasmine-console-reporter": "^1.2.7",
-    "jasmine-reporters": "^2.2.1",
+    "jasmine-reporters": "^2.5.0",
     "jasmine-spec-reporter": "^4.0.0"
   },
   "dependencies": {
